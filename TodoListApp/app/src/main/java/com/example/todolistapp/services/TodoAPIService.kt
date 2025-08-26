@@ -16,17 +16,17 @@ import retrofit2.http.Path
 
 interface TodoAPIService {
     @GET("api/todo-list")
-    fun getAllTodos(@Header("X-API-TOKEN") token: String): Call<GetAllTodoResponse>
+    fun getAllTodos(@Header("Authorization") token: String): Call<GetAllTodoResponse>
 
     @GET("api/todo-list/{id}")
-    fun getTodo(@Header("X-API-TOKEN") token: String, @Path("id") todoId: Int): Call<GetTodoResponse>
+    fun getTodo(@Header("Authorization") token: String, @Path("id") todoId: Int): Call<GetTodoResponse>
 
     @POST("api/todo-list")
-    fun createTodo(@Header("X-API-TOKEN") token: String, @Body todoModel: TodoRequest): Call<GeneralResponseModel>
+    fun createTodo(@Header("Authorization") token: String, @Body todoModel: TodoRequest): Call<GeneralResponseModel>
 
     @PUT("api/todo-list/{id}")
-    fun updateTodo(@Header("X-API-TOKEN") token: String, @Path("id") todoId: Int, @Body todoModel: TodoRequest): Call<GeneralResponseModel>
+    fun updateTodo(@Header("Authorization") token: String, @Path("id") todoId: Int, @Body todoModel: TodoRequest): Call<GeneralResponseModel>
 
     @DELETE("api/todo-list/{id}")
-    fun deleteTodo(@Header("X-API-TOKEN") token: String, @Path("id") todoId: Int): Call<GeneralResponseModel>
+    fun deleteTodo(@Header("Authorization") token: String, @Path("id") todoId: Int): Call<GeneralResponseModel>
 }

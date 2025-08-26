@@ -5,6 +5,5 @@ data class UserResponse(
 )
 
 data class UserModel (
-    val username: String,
     val token: String?
 )

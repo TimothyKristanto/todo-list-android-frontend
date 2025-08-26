@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
+import com.auth0.android.jwt.JWT
 import com.example.todolistapp.R
 import com.example.todolistapp.TodoListApplication
 import com.example.todolistapp.enums.PagesEnum
@@ -166,7 +167,13 @@ class AuthenticationViewModel(
                         if (res.isSuccessful) {
                             Log.d("response-data", "RESPONSE DATA: ${res.body()}")
 
-                            saveUsernameToken(res.body()!!.data.token!!, res.body()!!.data.username)
+                            val token = res.body()!!.data.token
+
+                            val jwt = JWT(token!!)
+
+                            val username = jwt.getClaim("username").asString()
+
+                            saveUsernameToken(token, username!!)
 
                             dataStatus = AuthenticationStatusUIState.Success(res.body()!!.data)
 
@@ -212,7 +219,13 @@ class AuthenticationViewModel(
                 call.enqueue(object: Callback<UserResponse> {
                     override fun onResponse(call: Call<UserResponse>, res: Response<UserResponse>) {
                         if (res.isSuccessful) {
-                            saveUsernameToken(res.body()!!.data.token!!, res.body()!!.data.username)
+                            val token = res.body()!!.data.token
+
+                            val jwt = JWT(token!!)
+
+                            val username = jwt.getClaim("username").asString()
+
+                            saveUsernameToken(token, username!!)
 
                             dataStatus = AuthenticationStatusUIState.Success(res.body()!!.data)
 

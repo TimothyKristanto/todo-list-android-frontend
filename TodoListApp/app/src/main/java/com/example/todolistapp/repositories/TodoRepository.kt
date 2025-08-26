@@ -24,7 +24,7 @@ class NetworkTodoRepository(
     private val todoAPIService: TodoAPIService
 ): TodoRepository {
     override fun getAllTodos(token: String): Call<GetAllTodoResponse> {
-        return todoAPIService.getAllTodos(token)
+        return todoAPIService.getAllTodos("Bearer ${token}")
     }
 
     override fun createTodo(
@@ -36,13 +36,13 @@ class NetworkTodoRepository(
         priority: String
     ): Call<GeneralResponseModel> {
         return todoAPIService.createTodo(
-            token,
+            "Bearer ${token}",
             TodoRequest(title, status, priority, description, dueDate)
         )
     }
 
     override fun getTodo(token: String, todoId: Int): Call<GetTodoResponse> {
-        return todoAPIService.getTodo(token, todoId)
+        return todoAPIService.getTodo("Bearer ${token}", todoId)
     }
 
     override fun updateTodo(
@@ -54,10 +54,10 @@ class NetworkTodoRepository(
         status: String,
         priority: String
     ): Call<GeneralResponseModel> {
-        return todoAPIService.updateTodo(token, todoId, TodoRequest(title, status, priority, description, dueDate))
+        return todoAPIService.updateTodo("Bearer ${token}", todoId, TodoRequest(title, status, priority, description, dueDate))
     }
 
     override fun deleteTodo(token: String, todoId: Int): Call<GeneralResponseModel> {
-        return todoAPIService.deleteTodo(token, todoId)
+        return todoAPIService.deleteTodo("Bearer ${token}", todoId)
     }
 }

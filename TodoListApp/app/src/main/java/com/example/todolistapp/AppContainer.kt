@@ -13,7 +13,6 @@ import com.example.todolistapp.repositories.TodoRepository
 import com.example.todolistapp.repositories.UserRepository
 import com.example.todolistapp.services.AuthenticationAPIService
 import com.example.todolistapp.services.TodoAPIService
-import com.example.todolistapp.services.UserAPIService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -32,7 +31,7 @@ class DefaultAppContainer(
     private val userDataStore: DataStore<Preferences>
 ): AppContainer {
     // change it to your own local ip please
-    private val baseUrl = "http://192.168.18.252:3000/"
+    private val baseUrl = "http://192.168.18.113:3000/"
 
     // RETROFIT SERVICE
     // delay object creation until needed using lazy
@@ -40,12 +39,6 @@ class DefaultAppContainer(
         val retrofit = initRetrofit()
 
         retrofit.create(AuthenticationAPIService::class.java)
-    }
-
-    private val userRetrofitService: UserAPIService by lazy {
-        val retrofit = initRetrofit()
-
-        retrofit.create(UserAPIService::class.java)
     }
 
     private val todoRetrofitService: TodoAPIService by lazy {
@@ -61,7 +54,7 @@ class DefaultAppContainer(
     }
 
     override val userRepository: UserRepository by lazy {
-        NetworkUserRepository(userDataStore, userRetrofitService)
+        NetworkUserRepository(userDataStore)
     }
 
     override val todoRepository: TodoRepository by lazy {
