@@ -15,16 +15,13 @@ interface UserRepository {
     val currentUserToken: Flow<String>
     val currentUsername: Flow<String>
 
-    fun logout(token: String): Call<GeneralResponseModel>
-
     suspend fun saveUserToken(token: String)
 
     suspend fun saveUsername(username: String)
 }
 
 class NetworkUserRepository(
-    private val userDataStore: DataStore<Preferences>,
-    private val userAPIService: UserAPIService
+    private val userDataStore: DataStore<Preferences>
 ): UserRepository {
     private companion object {
         val USER_TOKEN = stringPreferencesKey("token")
@@ -49,9 +46,5 @@ class NetworkUserRepository(
         userDataStore.edit { preferences ->
             preferences[USERNAME] = username
         }
-    }
-
-    override fun logout(token: String): Call<GeneralResponseModel> {
-        return userAPIService.logout(token)
     }
 }
