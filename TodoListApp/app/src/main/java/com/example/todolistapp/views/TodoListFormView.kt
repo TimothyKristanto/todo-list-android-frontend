@@ -189,7 +189,7 @@ fun TodoListFormView(
                         if (todoListFormViewModel.isUpdate) {
                             todoListFormViewModel.updateTodo(token, getTodo =  {
                                 todoDetailViewModel.getTodo(token, todoListFormViewModel.todoId, navController, todoListFormViewModel.isUpdate)
-                            })
+                            }, navController)
                         } else {
                             todoListFormViewModel.createTodo(navController, token = token)
                         }

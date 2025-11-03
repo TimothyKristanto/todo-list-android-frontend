@@ -25,6 +25,7 @@ import com.example.todolistapp.repositories.TodoRepository
 import com.example.todolistapp.repositories.UserRepository
 import com.example.todolistapp.uiStates.StringDataStatusUIState
 import com.example.todolistapp.uiStates.TodoListFormUIState
+import com.example.todolistapp.utils.GlobalUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -226,6 +227,18 @@ class TodoListFormViewModel(
                             )
 
                             submissionStatus = StringDataStatusUIState.Failed(errorMessage.errors)
+
+                            if (res.code() == 401) {
+                                viewModelScope.launch {
+                                    GlobalUtil.resetUsernameToken(userRepository)
+                                }
+
+                                navController.navigate(PagesEnum.Login.name) {
+                                    popUpTo(PagesEnum.CreateTodo.name) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -244,7 +257,7 @@ class TodoListFormViewModel(
         submissionStatus = StringDataStatusUIState.Start
     }
 
-    fun updateTodo(token: String, getTodo: () -> Unit) {
+    fun updateTodo(token: String, getTodo: () -> Unit, navController: NavHostController) {
         viewModelScope.launch {
             submissionStatus = StringDataStatusUIState.Loading
 
@@ -269,6 +282,18 @@ class TodoListFormViewModel(
                             )
 
                             submissionStatus = StringDataStatusUIState.Failed(errorMessage.errors)
+
+                            if (res.code() == 401) {
+                                viewModelScope.launch {
+                                    GlobalUtil.resetUsernameToken(userRepository)
+                                }
+
+                                navController.navigate(PagesEnum.Login.name) {
+                                    popUpTo(PagesEnum.CreateTodo.name) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         }
                     }
 

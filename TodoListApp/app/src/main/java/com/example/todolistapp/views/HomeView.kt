@@ -66,7 +66,7 @@ fun HomeView(
 
     LaunchedEffect(token) {
         if (token != "Unknown") {
-            homeViewModel.getAllTodos(token)
+            homeViewModel.getAllTodos(token, navController)
         }
     }
 

@@ -24,6 +24,7 @@ import com.example.todolistapp.uiStates.AuthenticationUIState
 import com.example.todolistapp.uiStates.HomeUIState
 import com.example.todolistapp.uiStates.StringDataStatusUIState
 import com.example.todolistapp.uiStates.TodoDataStatusUIState
+import com.example.todolistapp.utils.GlobalUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -91,7 +92,7 @@ class HomeViewModel(
         }
     }
 
-    fun getAllTodos(token: String) {
+    fun getAllTodos(token: String, navController: NavHostController) {
         viewModelScope.launch {
             Log.d("token-home", "TOKEN AT HOME: ${token}")
 
@@ -112,6 +113,18 @@ class HomeViewModel(
                             )
 
                             dataStatus = TodoDataStatusUIState.Failed(errorMessage.errors)
+
+                            if (res.code() == 401) {
+                                viewModelScope.launch {
+                                    GlobalUtil.resetUsernameToken(userRepository)
+                                }
+
+                                navController.navigate(PagesEnum.Login.name) {
+                                    popUpTo(PagesEnum.Home.name) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         }
                     }
 

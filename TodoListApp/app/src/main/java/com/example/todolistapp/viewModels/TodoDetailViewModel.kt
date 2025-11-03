@@ -19,8 +19,10 @@ import com.example.todolistapp.models.GeneralResponseModel
 import com.example.todolistapp.models.GetTodoResponse
 import com.example.todolistapp.models.TodoModel
 import com.example.todolistapp.repositories.TodoRepository
+import com.example.todolistapp.repositories.UserRepository
 import com.example.todolistapp.uiStates.StringDataStatusUIState
 import com.example.todolistapp.uiStates.TodoDetailDataStatusUIState
+import com.example.todolistapp.utils.GlobalUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -29,7 +31,8 @@ import retrofit2.Response
 import java.io.IOException
 
 class TodoDetailViewModel(
-    private val todoRepository: TodoRepository
+    private val todoRepository: TodoRepository,
+    private val userRepository: UserRepository
 ): ViewModel() {
     var dataStatus: TodoDetailDataStatusUIState by mutableStateOf(TodoDetailDataStatusUIState.Start)
         private set
@@ -67,6 +70,18 @@ class TodoDetailViewModel(
                             )
 
                             dataStatus = TodoDetailDataStatusUIState.Failed(errorMessage.errors)
+
+                            if (res.code() == 401) {
+                                viewModelScope.launch {
+                                    GlobalUtil.resetUsernameToken(userRepository)
+                                }
+
+                                navController.navigate(PagesEnum.Login.name) {
+                                    popUpTo(PagesEnum.TodoDetail.name) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -107,6 +122,18 @@ class TodoDetailViewModel(
                             )
 
                             deleteStatus = StringDataStatusUIState.Failed(errorMessage.errors)
+
+                            if (res.code() == 401) {
+                                viewModelScope.launch {
+                                    GlobalUtil.resetUsernameToken(userRepository)
+                                }
+
+                                navController.navigate(PagesEnum.Login.name) {
+                                    popUpTo(PagesEnum.TodoDetail.name) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -126,7 +153,8 @@ class TodoDetailViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as TodoListApplication)
                 val todoRepository = application.container.todoRepository
-                TodoDetailViewModel(todoRepository)
+                val userRepository = application.container.userRepository
+                TodoDetailViewModel(todoRepository, userRepository)
             }
         }
     }
